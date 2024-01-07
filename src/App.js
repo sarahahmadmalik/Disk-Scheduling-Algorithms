@@ -16,7 +16,7 @@ function App() {
     return (
         <div className="outerContainer">
             <div>
-                <h1 className="topic">Disk Scheduling Algorithm</h1>
+                <h1 className="topic">Disk Scheduling Algorithms</h1>
             </div>
             <Container maxWidth="">
 
