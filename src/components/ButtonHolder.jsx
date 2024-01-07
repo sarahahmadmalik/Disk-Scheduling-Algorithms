@@ -91,14 +91,6 @@ export default function ButtonHolder({ setChartData, setSeekCount }) {
             );
             update_chart(seek_count, arr);
         }
-        if (mechanism === "CLOOK") {
-            console.log("CLOOK");
-            let { seek_count, arr } = CLOOK(
-                req_array,
-                Number(diskCurrentPosition)
-            );
-            update_chart(seek_count, arr);
-        }
     }
 
     function clear_handler() {
