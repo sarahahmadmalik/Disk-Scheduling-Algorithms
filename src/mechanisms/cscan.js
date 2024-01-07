@@ -1,89 +1,95 @@
-let size = 8;
-let disk_size = 199;
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-export default function CSCAN(arr, head) {
+export default async function CSCAN(arr, head, setChartData, setSeekCount, setCurr_seek, curr_seek) {
     let seek_count = 0;
     let distance, cur_track;
-    let left = [],
-        right = [];
+    let left = [];
+    let right = [];
     let seek_sequence = [];
 
-    // appending end values
-    // which has to be visited
-    // before reversing the direction
+    // Appending end values which have to be visited before reversing the direction
     left.push(0);
-    right.push(disk_size - 1);
+    right.push(199);
 
-    // tracks on the left of the
-    // head will be serviced when
-    // once the head comes back
-    // to the beggining (left end).
-    for (let i = 0; i < size; i++) {
+    // Tracks on the left of the head will be serviced when once the head comes back to the beginning (left end).
+    for (let i = 0; i < arr.length; i++) {
         if (arr[i] < head) left.push(arr[i]);
         if (arr[i] > head) right.push(arr[i]);
     }
 
-    // sorting left and right vectors
-    left.sort(function (a, b) {
-        return a - b;
-    });
-    right.sort(function (a, b) {
-        return a - b;
-    });
+    // Sorting left and right vectors
+    left.sort((a, b) => a - b);
+    right.sort((a, b) => a - b);
 
-    // first service the requests
-    // on the right side of the
-    // head.
+    // First service the requests on the right side of the head.
     for (let i = 0; i < right.length; i++) {
         cur_track = right[i];
 
-        // appending current track to seek sequence
+        // Appending current track to seek sequence
         seek_sequence.push(cur_track);
 
-        // calculate absolute distance
+        // Calculate absolute distance
         distance = Math.abs(cur_track - head);
 
-        // increase the total count
+        // Increase the total count
         seek_count += distance;
 
-        // accessed track is now new head
+        // Accessed track is now the new head
         head = cur_track;
+
+        // Build seek time string
+        if (curr_seek == undefined)
+            curr_seek = " ";
+        if (right[i + 1] != undefined) {
+            curr_seek += ` |${head}-${right[i+1]}|`;
+            curr_seek += '+';
+        }
+ 
+        setCurr_seek(curr_seek);
+
+        // Update state for animation
+        setChartData({ labels: [...Array(seek_sequence.length).keys()], arr: [...seek_sequence] });
+        setSeekCount(seek_count);
+
+        // Introduce a delay for animation
+        await delay(1000);
     }
 
-    // once reached the right end
-    // jump to the beggining.
+    // Once reached the right end, jump to the beginning.
     head = 0;
 
-    // adding seek count for head returning from 199 to 0
-    seek_count += disk_size - 1;
+    // Adding seek count for head returning from 199 to 0
+    seek_count += 199;
 
-    // Now service the requests again
-    // which are left.
+    // Now service the requests again which are left.
     for (let i = 0; i < left.length; i++) {
         cur_track = left[i];
 
-        // appending current track to seek sequence
+        // Appending current track to seek sequence
         seek_sequence.push(cur_track);
 
-        // calculate absolute distance
+        // Calculate absolute distance
         distance = Math.abs(cur_track - head);
 
-        // increase the total count
+        // Increase the total count
         seek_count += distance;
 
-        // accessed track is now the new head
+        // Accessed track is now the new head
         head = cur_track;
+
+        // Build seek time string
+        curr_seek += ` |${head}-${cur_track}|`;
+        if (i !== left.length - 1)
+            curr_seek += '+';
+        setCurr_seek(curr_seek);
+
+        // Update state for animation
+        setChartData({ labels: [...Array(seek_sequence.length).keys()], arr: [...seek_sequence] });
+        setSeekCount(seek_count);
+
+        // Introduce a delay for animation
+        await delay(1000);
     }
 
-    // document.write("Total number of seek operations = " + seek_count + "</br>");
-    // document.write("Seek Sequence is" + "</br>");
-    // for (let i = 0; i < seek_sequence.length; i++) {
-    //     document.write(seek_sequence[i] + "</br>");
-    // }
-
-    arr = seek_sequence;
-
-    return { seek_count, arr };
+    return { seek_count, arr: seek_sequence };
 }
-
-

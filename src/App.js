@@ -13,6 +13,7 @@ function App() {
     const [chartData, setChartData] = useState({ labels: null, arr: null });
     const [seekCount, setSeekCount] = useState(0);
     const [curr_seek, setCurr_seek] = useState("")
+    
     return (
         <div className="outerContainer">
             <div>

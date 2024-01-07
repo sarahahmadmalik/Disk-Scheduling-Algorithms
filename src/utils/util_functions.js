@@ -27,6 +27,7 @@ export function validate_inputs(
     if (diskStartPointProcessed > diskEndPointProcessed) {
         throw new Error("Disk start point must be less than end point");
     }
+    
     if (diskCurrentPositionProcessed > diskEndPointProcessed) {
         throw new Error("Disk current position must be less than end point");
     }
