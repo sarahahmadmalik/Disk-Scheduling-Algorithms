@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 
-export default function SeekCountDisplay({ seekCount }) {
+export default function SeekCountDisplay({ seekCount, currSeek }) {
     return (
         <Card
             sx={{
@@ -21,9 +21,20 @@ export default function SeekCountDisplay({ seekCount }) {
                         textAlign: "center",
                     }}
                     color="text.secondary"
-
+                    gutterBottom
+                    marginBottom={2}
                 >
-                    Seek Time: {seekCount}
+                    Total Seek Time: {seekCount}
+                </Typography>
+                <Typography
+                    sx={{
+                        fontSize: { xs: 14, md: 18 },
+                        textAlign: "center",
+                    }}
+                    color="text.primary"
+                    gutterBottom
+                >
+                    Seek Time: {currSeek}
                 </Typography>
             </CardContent>
         </Card>

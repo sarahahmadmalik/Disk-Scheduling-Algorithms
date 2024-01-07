@@ -7,12 +7,12 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from '@mui/material/Typography';
-
 import SeekCountDisplay from "./components/SeekCountDisplay";
 
 function App() {
     const [chartData, setChartData] = useState({ labels: null, arr: null });
     const [seekCount, setSeekCount] = useState(0);
+    const [curr_seek, setCurr_seek] = useState("")
     return (
         <div className="outerContainer">
             <div>
@@ -23,11 +23,11 @@ function App() {
                 <Box sx={{ flexGrow: 1 }}>
                     <Grid container spacing={4}>
                         <Grid item xs={12} md={5}>
-                            <ButtonHolder setChartData={setChartData} setSeekCount={setSeekCount} />
+                            <ButtonHolder setChartData={setChartData} setSeekCount={setSeekCount} setCurr_seek={setCurr_seek} currSeek={curr_seek} />
                         </Grid>
                         <Grid item xs={12} md={7}>
                             <LineChart chartData={chartData} />
-                            <SeekCountDisplay seekCount={seekCount} />
+                            <SeekCountDisplay seekCount={seekCount} currSeek={curr_seek} />
                         </Grid>
                     </Grid>
                 </Box>

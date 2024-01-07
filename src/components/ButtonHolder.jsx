@@ -9,40 +9,18 @@ import SelectDirection from "./SelectDirection";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 
-import { validate_inputs } from "../utils/util_functions";
 import FCFS from "../mechanisms/fcfs";
 import SSTF from "../mechanisms/sstf";
 import SCAN from "../mechanisms/scan";
 import CSCAN from "../mechanisms/cscan";
 
-/*
-    const data = {
-    labels: [1, 2, 3, 4, 5, 6, 7],
-    datasets: [
-        {
-            label: "Disk Scheduling",
-            fill: false,
-            lineTension: 0,
-            backgroundColor: "rgba(40,30,192,0.4)",
-            data: [50, 108, 45, 90, 198, 120, 40],
-        },
-    ],
-};
-*/
-
-export default function ButtonHolder({ setChartData, setSeekCount }) {
+export default function ButtonHolder({ setChartData, setSeekCount, setCurr_seek, curr_seek }) {
     const [mechanism, setMechanism] = React.useState("");
     const [direction, setDirection] = React.useState("");
-
-    // for inputs
     const [diskStartPoint, setDiskStartPoint] = React.useState("");
     const [diskEndPoint, setDiskEndPoint] = React.useState("");
     const [diskCurrentPosition, setDiskCurrentPosition] = React.useState("");
     const [diskRequestInput, setDiskRequestInput] = React.useState("");
-
-    function step_handler() {
-        console.log("step btn clicked");
-    }
 
     function update_chart(seek_count, arr) {
         let labels = [...Array(arr.length + 1).keys()];
@@ -51,65 +29,46 @@ export default function ButtonHolder({ setChartData, setSeekCount }) {
         setSeekCount(seek_count);
     }
 
-    function run_handler() {
-        console.log(Number(diskStartPoint));
-        console.log(Number(diskEndPoint));
-        console.log(Number(diskCurrentPosition));
+    async function run_handler() {
+        // console.log(Number(diskStartPoint));
+        // console.log(Number(diskEndPoint));
+        // console.log(Number(diskCurrentPosition));
 
         let req_array = diskRequestInput.split(" ").map(Number);
-
         console.log(req_array);
 
-        // check the mechanism and do the operation
-        if (mechanism === "FCFS") {
-            console.log("FCFS");
-            let { seek_count, arr } = FCFS(
-                req_array,
-                Number(diskCurrentPosition)
-            );
-            update_chart(seek_count, arr);
-        }
-        if (mechanism === "SCAN") {
-            console.log("SCAN");
-            let { seek_count, arr } = SCAN(req_array, Number(diskCurrentPosition), direction);
-            update_chart(seek_count, arr);
-        }
-        if (mechanism === "SSTF") {
-            console.log("SSTF");
-            let { seek_count, arr } = SSTF(
-                req_array,
-                Number(diskCurrentPosition)
-            );
-            update_chart(seek_count, arr);
-        }
+        if (mechanism === "FCFS" || mechanism === "SCAN" || mechanism === "SSTF" || mechanism === "CSCAN") {
+            console.log(mechanism);
 
-        if (mechanism === "CSCAN") {
-            console.log("CSCAN");
-            let { seek_count, arr } = CSCAN(
-                req_array,
-                Number(diskCurrentPosition)
-            );
-            update_chart(seek_count, arr);
+
+            async function calculateStep() {
+             
+                    let { seek_count, arr } = mechanism === "FCFS"
+                        ? await FCFS(req_array, Number(diskCurrentPosition), setChartData, setSeekCount, setCurr_seek, curr_seek)
+                        : mechanism === "SCAN"
+                            ? SCAN(req_array, Number(diskCurrentPosition), setChartData, setSeekCount, setCurr_seek, curr_seek, direction)
+                            : mechanism === "SSTF"
+                                ? SSTF(req_array, Number(diskCurrentPosition))
+                                : CSCAN(req_array, Number(diskCurrentPosition));
+                    
+                
+            }
+
+            calculateStep();
         }
     }
 
     function clear_handler() {
-        console.log("clear btn clicked");
-        setDiskStartPoint();
-        setDiskEndPoint();
-        setDiskCurrentPosition();
-        setDiskRequestInput()
+        setDiskStartPoint("");
+        setDiskEndPoint("");
+        setDiskCurrentPosition("");
+        setDiskRequestInput("");
     }
 
     return (
-        <Card sx={{ minWidth: 275, marginBottom: 2, background:"rgba(255, 255, 255, 0.7)", backdropFilter: "blur(10px)", borderRadius: 4  }}>
+        <Card sx={{ minWidth: 275, marginBottom: 2, background: "rgba(255, 255, 255, 0.7)", backdropFilter: "blur(10px)", borderRadius: 4 }}>
             <CardContent>
-                <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                    marginBottom={2}
-                >
+                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom marginBottom={2}>
                     Disk Scheduling
                 </Typography>
                 <Box
@@ -120,10 +79,7 @@ export default function ButtonHolder({ setChartData, setSeekCount }) {
                         justifyContent: "space-between",
                     }}
                 >
-                    <SelectMechanism
-                        mechanism={mechanism}
-                        setMechanism={setMechanism}
-                    />
+                    <SelectMechanism mechanism={mechanism} setMechanism={setMechanism} />
                     <TextField
                         id="startPoint"
                         label="Disk start point"
@@ -161,24 +117,17 @@ export default function ButtonHolder({ setChartData, setSeekCount }) {
                         }}
                     />
                     {mechanism === "SCAN" ? (
-                        <SelectDirection
-                            direction={direction}
-                            setDirection={setDirection}
-                        />
+                        <SelectDirection direction={direction} setDirection={setDirection} />
                     ) : null}
                 </Box>
             </CardContent>
             <CardActions>
-                {/* <Button onClick={step_handler} size="small">
-                    Step
-                </Button> */}
-                
                 <Button
                     onClick={run_handler}
                     size="small"
                     style={{ backgroundColor: "#4CAF50", color: "white", margin: "10px", "&:hover": { backgroundColor: "#45a049" } }}
                 >
-                    Run 
+                    Run
                 </Button>
                 <Button
                     onClick={clear_handler}
@@ -187,7 +136,6 @@ export default function ButtonHolder({ setChartData, setSeekCount }) {
                 >
                     Clear
                 </Button>
-                
             </CardActions>
         </Card>
     );
