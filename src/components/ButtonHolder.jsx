@@ -49,7 +49,7 @@ export default function ButtonHolder({ setChartData, setSeekCount, setCurr_seek,
                             ? SCAN(req_array, Number(diskCurrentPosition), direction, setChartData, setSeekCount, setCurr_seek, curr_seek)
                             : mechanism === "SSTF"
                                 ? SSTF(req_array, Number(diskCurrentPosition), setChartData, setSeekCount,setCurr_seek, curr_seek )
-                                : CSCAN(req_array, Number(diskCurrentPosition), setChartData, setSeekCount,setCurr_seek, curr_seek);
+                                : CSCAN(req_array, Number(diskCurrentPosition), direction, setChartData, setSeekCount,setCurr_seek, curr_seek);
                     
                 
             }
