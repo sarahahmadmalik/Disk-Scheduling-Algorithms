@@ -2,7 +2,7 @@ const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 export default async function SSTF(queue, head, setChartData, setSeekCount, setCurr_seek, curr_seek) {
     var n = queue.length;
-    head = 50;
+    // head = head;
 
     if (n <= 0) {
         return { seek_count: 0, arr: [] };

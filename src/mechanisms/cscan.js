@@ -1,6 +1,6 @@
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-export default async function CSCAN(arr, head, setChartData, setSeekCount, setCurr_seek, curr_seek) {
+export default async function CSCAN(arr, head, direction, setChartData, setSeekCount, setCurr_seek, curr_seek) {
     let seek_count = 0;
     let distance, cur_track;
     let left = [];
